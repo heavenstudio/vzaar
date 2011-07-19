@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     "Changelog",
     "LICENSE",
     "README",
+    "Rakefile",
     "VERSION",
     "demo.rb",
     "lib/rails/controllers/vzaar_controller.rb",
@@ -43,7 +44,8 @@ Gem::Specification.new do |s|
     "rails_generators/vzaar_uploader/templates/javascripts/swfupload.queue.js",
     "rails_generators/vzaar_uploader/templates/stylesheets/swfupload.css",
     "rails_generators/vzaar_uploader/templates/views/uploader.html.erb",
-    "rails_generators/vzaar_uploader/vzaar_uploader_generator.rb"
+    "rails_generators/vzaar_uploader/vzaar_uploader_generator.rb",
+    "vzaar.gemspec"
   ]
   s.homepage = %q{http://github.com/tailorbirds/vzaar}
   s.require_paths = ["lib"]
