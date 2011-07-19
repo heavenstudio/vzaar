@@ -1,0 +1,21 @@
+0.2.4
+
+Started transition to rails 3.1 and ruby 1.9.2
+
+0.2.3
+
+ADDED transcoding param to upload_video and process_video
+
+0.2.2.2
+
+ADDED play_count to video_details
+
+0.2.2
+
+UPDATED gem dependencies
+
+0.2.0
+
+CHANGED errors handling
+ADDED vzaar/view_helpers
+ADDED rails_generators

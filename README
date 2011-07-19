@@ -1,0 +1,35 @@
+This is a fork of the original vzaar gem. It has been further tweaked (and better documented) to work with rails 3.1 on one of our own personal projects.
+The rails generator from the original gem doesn't work anymore, but everything else seems to work fine.
+
+== Rails 3.1 ==
+
+Puts this on your Gemfile:
+
+  gem 'vzaar', git: 'http://github.com/tailorbirds/vzaar.git'
+  gem 'oauth', '0.3.6'
+  gem 'httpclient'
+  
+Next, copy the following folders (since the generator is broken):
+  * {vzaar-folder}/rails_generators/templates/images/* into {rails_root}/app/assets/images
+  * {vzaar-folder}/rails_generators/templates/javascripts into {rails_root}/app/assets/javascripts/vzaar
+  * {vzaar-folder}/rails_generators/templates/stylesheets into {rails_root}/app/assets/stylesheets/vzaar
+  * {vzaar-folder}/rails_generators/templates/flash into {rails_root}/public/flash/vzaar
+  * {vzaar-folder}/rails_generators/templates/views/uploader.html.erb into {rails_root}/app/views/vzaar/index.html.erb
+  * {vzaar-folder}/lib/rails/controllers/vzaar_controller.rb into {rails_root}/app/controllers/vzaar_controller.rb
+  
+If you don't know where the gem was installed (by bundler), you can find it with 'bundle show vzaar'
+
+You will need to configure your username and application secret in VzaarController.connect_to_vzaar accordinly, and also add the following routes to config/routes.rb:
+  match "/vzaar" => "vzaar#index"
+  match "/vzaar/signature" => "vzaar#signature"
+  match "/vzaar/process_video" => "vzaar#process_video"
+  
+After that, you should be able to access vzaar/index and see your uploaded videos and upload new ones to vzaar.
+
+== TODO ==
+* Make generator work
+* Add specs
+* Make the default uploader better
+
+Original Author:: Mariusz Lusiak <mailto:mariusz@applicake.com>
+Changes made by:: Stefano Diem Benatti <mailto:stefanodiem@tailorbirds.com.br>

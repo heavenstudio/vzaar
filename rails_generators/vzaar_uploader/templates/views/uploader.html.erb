@@ -1,0 +1,15 @@
+<%= include_vzaar_javascripts %>
+<%= link_vzaar_stylesheets %>
+
+<div>Upload videos to vzaar:</div>
+<%= vzaar_flash_uploader %>
+
+<div>
+  Currently available videos (uncomment the code below
+  and replace YOUR_VZAAR_LOGIN with your actual login to show your videos):
+  <ul>
+    <% Vzaar.connection.video_list('YOUR_VZAAR_LOGIN', true).each do |video| %>
+      <li><%= video.title %></li>
+    <% end %>
+  </ul>
+</div>
