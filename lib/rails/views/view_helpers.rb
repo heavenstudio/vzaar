@@ -22,8 +22,8 @@ module Vzaar
       content_tag(:input, nil, :type => "hidden", :name => "signature", :value => "#{signature.signature}")
     end
     
-    def vzaar_success_redirect(url)
-      content_tag(:input, nil, :type => "hidden", :name => "success_action_redirect", :value => url)
+    def vzaar_success_redirect(signature)
+      content_tag(:input, nil, :type => "hidden", :name => "success_action_redirect", :value => signature.success_action_redirect)
     end
 
     # 
@@ -75,7 +75,7 @@ module Vzaar
               value="#{signature.profile}">
         }
       end
-      upload_form += vzaar_success_redirect(signature.success_action_redirect) if signature.success_action_redirect
+      upload_form += vzaar_success_redirect(signature) if signature.success_action_redirect
       upload_form += %Q{
       		  <label class='videoFileStep'>video file to be uploaded</label>
       		  <input name="file" type="file" id="fileField" onchange="EnableBasicButton();"> 

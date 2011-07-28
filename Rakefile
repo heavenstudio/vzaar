@@ -14,6 +14,7 @@ begin
     
     gemspec.add_dependency 'oauth', '0.3.6'
     gemspec.add_dependency 'httpclient'
+    gemspec.add_dependency 'nokogiri'
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install jeweler"

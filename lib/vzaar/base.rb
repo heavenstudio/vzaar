@@ -2,6 +2,7 @@ module Vzaar
 
   # You can use Vzaar::Base class for accessing and managing your resources on vzaar.
   class Base
+    attr_accessor :login
 
     # When creating a Vzaar::Base instance you can (but don't have to) specify
     # login and application_token. However if you don't specify them you
@@ -22,7 +23,7 @@ module Vzaar
     # * vzaar = Vzaar::Base.new :server => 'sandbox.vzaar.com', :logger => your_logger 
     # * vzaar = Vzaar::Base.new :logger => your_logger
     def initialize(options= {})
-      login = options[:login] || ENV['VZAAR_LOGIN'] || ''
+      @login = options[:login] || ENV['VZAAR_LOGIN'] || ''
       application_token = options[:application_token] || ENV['VZAAR_APPLICATION_TOKEN'] || ''
       server = options[:server] || ENV['VZAAR_SERVER'] || VZAAR_LIVE_SERVER
       @logger = options[:logger] || Logger.new(STDOUT)
@@ -32,8 +33,8 @@ module Vzaar
       consumer = OAuth::Consumer.new '', '', { :site => "http://#{server}" }
       @public_connection = OAuth::AccessToken.new consumer, '', ''
       consumer = OAuth::Consumer.new '', '', { :site => "https://#{server}" }
-      if login.length > 0 and application_token.length > 0
-        @auth_connection = OAuth::AccessToken.new consumer, login, application_token
+      if @login.length > 0 and application_token.length > 0
+        @auth_connection = OAuth::AccessToken.new consumer, @login, application_token
       else
         # Authenticated requests won't be possible
         @auth_connection = nil
@@ -105,7 +106,7 @@ module Vzaar
     # Note: even if you created an authorized instance of Vzaar::Base class
     # if you don't set the 'authenticated' param to true you will receive
     # only public videos.
-    def video_list(login, authenticated = false)
+    def video_list(login = nil, authenticated = false)
       result = []
       response = nil
       if authenticated
@@ -121,6 +122,10 @@ module Vzaar
         end
       end
       result
+    end
+    
+    def videos
+      video_list(@login, true)
     end
 
     # Gets video details, inlcuding embed code. Use 'authenticated' option to 
@@ -229,6 +234,7 @@ module Vzaar
     # :title => 'Some title', :description => 'Some description', 
     # :profile => 1, :transcoding => true
     def process_video(options = {})
+      vzaar_video_id = nil
       request_xml = %{
         <?xml version="1.0" encoding="UTF-8"?>
         <vzaar-api>
@@ -247,7 +253,10 @@ module Vzaar
           </video>
         </vzaar-api>
       }
-      auth_connection HTTP_POST, '/api/videos', request_xml
+      auth_connection HTTP_POST, '/api/videos', request_xml do |response_body|
+        vzaar_video_id = get_video_id_from_response_body(response_body)
+      end
+      vzaar_video_id
     end
 
     # Uploads a video to vzaar. You can force transcoding video by setting
@@ -258,7 +267,7 @@ module Vzaar
     # Usage:
     # * vzaar.upload_video '/home/me/video.mp4', 'some title', 'some desc', '1'
     # * vzaar.upload_video '/home/me/video.mp4', ""
-    def upload_video(path, title, description, profile, transcoding = nil)
+    def upload_video(path, title = "", description = "", profile = "", transcoding = nil)
       # Get signature
       sig = signature
       @logger.debug "Uploading..." 
@@ -278,9 +287,14 @@ module Vzaar
     end
 
     private 
+      # Gets the video id from a uploaded video (parsed from the xml response)
+      def get_video_id_from_response_body(response_body)
+        doc = Nokogiri::XML(response_body)
+        doc.css('vzaar-api video').first.content
+      end
       
       # Performs the public connection
-      def public_connection(method, url, xml = '', &block)
+      def public_connection(method, url, xml = '')
         res = nil
         begin
           case method
@@ -332,7 +346,7 @@ module Vzaar
       end
 
       # Performs the authenticated connection
-      def auth_connection(method, url, xml = '', &block)
+      def auth_connection(method, url, xml = '')
         res = nil
         begin 
           if @auth_connection
