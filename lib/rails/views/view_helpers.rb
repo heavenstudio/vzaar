@@ -12,6 +12,19 @@ module Vzaar
     def link_vzaar_stylesheets
       stylesheet_link_tag 'stylesheets/vzaar/swfupload.css'
     end
+    
+    def vzaar_basic_params(signature)
+      content_tag(:input, nil, :type => "hidden", :name => "key", :value => "#{signature.key}") +
+      content_tag(:input, nil, :type => "hidden", :name => "AWSAccessKeyId", :value => "#{signature.aws_access_key}") +
+      content_tag(:input, nil, :type => "hidden", :name => "acl", :value => "#{signature.acl}") +
+      content_tag(:input, nil, :type => "hidden", :name => "success_action_status", :value => "201") +
+      content_tag(:input, nil, :type => "hidden", :name => "policy", :value => "#{signature.policy}") +
+      content_tag(:input, nil, :type => "hidden", :name => "signature", :value => "#{signature.signature}")
+    end
+    
+    def vzaar_success_redirect(url)
+      content_tag(:input, nil, :type => "hidden", :name => "success_action_redirect", :value => url)
+    end
 
     # 
     # <%=
@@ -52,12 +65,7 @@ module Vzaar
         <form action="http://#{signature.bucket}.s3.amazonaws.com/" method="post" 
           enctype="multipart/form-data" id="uploadToS3">
 	        <div class="uploadFieldsWrapper" style="width:490px; float:left">
-			      <input type="hidden" name="key" value="#{signature.key}">
-			      <input type="hidden" name="AWSAccessKeyId" value="#{signature.aws_access_key}">
-			      <input type="hidden" name="acl" value="#{signature.acl}"> 
-			      <input type="hidden" name="success_action_status" value="201">
-			      <input type="hidden" name="policy" value="#{signature.policy}">
-			      <input type="hidden" name="signature" value="#{signature.signature}">
+			      #{vzaar_basic_params(signature)}
       }
       if signature.profile and signature.title
         upload_form += %Q{
@@ -67,12 +75,7 @@ module Vzaar
               value="#{signature.profile}">
         }
       end
-      if signature.success_action_redirect
-        upload_form += %Q{
-            <input type="hidden" name="success_action_redirect"
-              value="#{signature.success_action_redirect}">
-        }
-      end
+      upload_form += vzaar_success_redirect(signature.success_action_redirect) if signature.success_action_redirect
       upload_form += %Q{
       		  <label class='videoFileStep'>video file to be uploaded</label>
       		  <input name="file" type="file" id="fileField" onchange="EnableBasicButton();"> 
