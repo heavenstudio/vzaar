@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{vzaar}
-  s.version = "0.2.4"
+  s.version = "0.2.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mariusz Lusiak", "Stefano Diem Benatti"]
-  s.date = %q{2011-07-28}
+  s.date = %q{2011-07-29}
   s.description = %q{A gem to be able to use vzaar.com's api with ruby}
   s.email = %q{stefano@tailorbirds.com.br}
   s.extra_rdoc_files = [
