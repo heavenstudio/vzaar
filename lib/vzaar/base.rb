@@ -128,7 +128,7 @@ module Vzaar
       video_list(@login, true)
     end
 
-    # Gets video details, inlcuding embed code. Use 'authenticated' option to 
+    # Gets video details, including embed code. Use 'authenticated' option to 
     # retrieve details of private video.
     #
     # Usage:
