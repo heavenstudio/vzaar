@@ -22,7 +22,7 @@ module Vzaar
             :wmode => "transparent", :width => width, :height => height, :allowScriptAccess => "always", :allowFullScreen => "true",
             :flashvars => embed_video_options(options)) +
           content_tag(:video, nil, :width => width, :height => height, :src => "http://view.vzaar.com/#{id}.mobile",
-            :poster => "http://view.vzaar.com/809243.image", :controls => true, :onclick => "this.play();")
+            :poster => "http://view.vzaar.com/#{id}.image", :controls => true, :onclick => "this.play();")
         end
       end
     end
