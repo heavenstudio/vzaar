@@ -1,9 +1,7 @@
 require 'vzaar/base'
 
 module Vzaar
-
-  module ViewHelpers
-  
+  module ViewHelpers  
     def include_vzaar_javascripts
       javascript_include_tag 'vzaar/json_parse', 'vzaar/swfupload', 'vzaar/handlers', 
         'vzaar/swfupload.queue', 'vzaar/fileprogress'
@@ -13,38 +11,10 @@ module Vzaar
       stylesheet_link_tag 'stylesheets/vzaar/swfupload.css'
     end
     
-    def embed_video(id, options="border=none", width="448", height="336")
-      content_tag(:div, :class => "vzaar_media_player") do
-        content_tag(:object, :id => "video", :width => width, :height => height,
-          :type => "application/x-shockwave-flash", :data => "http://view.vzaar.com/#{id}.flashplayer") do
-          embed_video_params(id, options, width, height) +
-          content_tag(:embed, nil, :src => "http://view.vzaar.com/#{id}.flashplayer", :type => "application/x-shockwave-flash",
-            :wmode => "transparent", :width => width, :height => height, :allowScriptAccess => "always", :allowFullScreen => "true",
-            :flashvars => embed_video_options(options)) +
-          content_tag(:video, nil, :width => width, :height => height, :src => "http://view.vzaar.com/#{id}.mobile",
-            :poster => "http://view.vzaar.com/#{id}.image", :controls => true, :onclick => "this.play();")
-        end
-      end
-    end
-
-    def embed_video_params(id, options, width, height)
-      content_tag(:param, nil, :name => "movie", :value => "http://view.vzaar.com/#{id}.flashplayer") +
-      content_tag(:param, nil, :name => "allowScriptAccess", :value => "always") +
-      content_tag(:param, nil, :name => "allowFullScreen", :value => "true") +
-      content_tag(:param, nil, :name => "wmode", :value => "transparent") +
-      content_tag(:param, nil, :name => "flashvars", :value => embed_video_options(options))
-    end
-    
-    def embed_video_options(options={})
-      default_options = {
-        :border => false,
-        :colorSet => nil # options are nil (black), :blue, :red, :green, :yellow, :pink, :orange and :brown
-      }
-      options = default_options.merge(options)
-      flashvars = []
-      flashvars << "border=none" if options[:border] == false
-      flashvars << "colorSet=#{options[:colorSet]}" if !options[:colorSet].nil?
-      flashvars.join("&")
+    def embed_video(id, width="448", height="336")
+      content_tag(:iframe, "", allowFullScreen: true, allowTransparency: true, class: 'vzaar-video-player', frameborder: 0,
+        width: width, height: height, mozallowfullscreen: true, id: "vzvd-#{id}", name: "vzvd-#{id}",
+        src: "http://view.vzaar.com/#{id}/player", title: "vzaar video player", type: "text/html", webkitAllowFullScreen: true)
     end
     
     def vzaar_basic_params(signature)
